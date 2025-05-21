@@ -1,29 +1,35 @@
 version: '3.8'
 
 services:
-  mongo:
-    image: mongo
-    container_name: mongo
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
     ports:
       - "27017:27017"
     volumes:
-      - mongo-data:/data/db
+      - mongodb_data:/data/db
 
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+    container_name: backend
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/consultancydb
+      - JWT_SECRET=myVerySecretKey123
+      - PORT=5000
     ports:
       - "5000:5000"
     depends_on:
-      - mongo
-    environment:
-      - MONGO_URL=mongodb://mongo:27017/consultancydb
+      - mongodb
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+    container_name: frontend
     ports:
       - "3000:3000"
     depends_on:
       - backend
 
 volumes:
-  mongo-data:
+  mongodb_data:

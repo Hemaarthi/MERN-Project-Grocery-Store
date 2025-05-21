@@ -29,6 +29,16 @@ app.use("/api/products", productRoutes);
 app.use('/api/order', orderRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); 
 app.use('/api', salesRoutes);
+//add
+app.get('/', (req, res) => {
+  res.send('Backend server is running!');
+});
+
+app.use(express.static(path.join(__dirname, '../frontend/build')));
+
+app.get('*', (req, res) =>
+  res.sendFile(path.resolve(__dirname, '../frontend/build', 'index.html'))
+);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
